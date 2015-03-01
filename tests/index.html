@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+    <head lang="en">
+        <meta charset="UTF-8">
+        <title>Testing queryDB</title>
+        <script src="../querydb.js"></script>
+        <script src="testlib.js"></script>
+        <script src="testdata.js"></script>
+    </head>
+    <body>
+        <div id="stat"></div>
+        <div id="result"></div>
+        <a href="javascript:insert()">Insert Data</a><br>
+        <a href="javascript:dropDB()">Drop Database</a><br>
+        <table border="1">
+            <thead>
+                <tr>
+                    <td>QDBQuery</td>
+                    <td>SQL</td>
+                    <td>run</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code><pre>{
+    table: [
+    	{name: "Rechnung", as: "r", where: {id: {"<": 50}}},
+    	{name: "Artikel", as: "a"},
+    	{name: "ArtikelZuRechnung", as: "azr"},
+    	{name: "Benutzer", as: "b"}
+    ],
+    joins: [
+        {table1: "r", table1attr: "ID", table2: "azr", table2attr: "RechnungID", stack: true}
+        {table1: "azr", table1attr: "ArtikelID", table2: "a", table2attr: "ID"}
+        {table1: "r", table1attr: "BenutzerID", table2: "b", table2attr: "ID"}
+    ],
+    keys: [
+    	{tablename: "r", attr: "BenutzerID"},
+        {tablename: "b", attr: "Vorname"},
+        {tablename: "b", attr: "Nachname"},
+        {tablename: "r", attr: "Datum"},
+        {tablename: "r", attr: "ID"},
+        {as: "Summe", func: "sum", value: {
+        		operator: "*",
+        		values: [
+        			{tablename: "azr", attr: "Anzahl"},
+        			{tablename: "a", attr:"Preis"}
+        		]
+        	}
+        }
+    ]
+}</pre></code></td>
+                    <td><pre><code>	SELECT
+		r.BenutzerID,
+		b.Vorname,
+		b.Nachname,
+		r.Datum,
+		r.ID,
+		SUM( a.Preis * azr.Anzahl ) AS Preis
+	FROM
+		Rechnung AS r,
+		ArtikelZuRechnung AS azr,
+		Artikel AS a,
+		Benutzer AS b
+	WHERE
+			r.ID < 5
+		AND
+			azr.RechnungID = r.ID
+		AND
+			azr.ArtikelID = a.ID
+		AND
+			b.ID = r.BenutzerID
+	GROUP BY
+		r.ID</code></pre></td>
+                    <td><a href="javascript:query3();">run</a></td>
+                </tr>
+                <tr>
+                    <td>q.get("Rechnung", {ID: {"<": 5}});</td>
+                    <td>SELECT * FROM Rechnung WHERE ID < 5</td>
+                    <td><a href="javascript:query4();">run</a></td>
+                </tr>
+                <tr>
+                    <td><pre><code>{
+    tables: [
+        {name: "Rechnung", as: "r", where: {ID: {"<": 5}}},
+        {name: "Benutzer", as: "b"}
+    ],
+    joins: [
+        {table1: "r", table1attr: "BenutzerID", table2: "b", table2attr: "ID"}
+    ],
+    keys: [
+        {tablename: "r", attr: "BenutzerID"},
+        {tablename: "b", attr: "Vorname"},
+        {tablename: "b", attr: "Nachname"},
+        {tablename: "r", attr: "Datum"}
+    ]
+}</code></pre></td>
+                    <td><pre>SELECT
+    BenutzerID,
+    Vorname,
+    Nachname,
+    Datum
+FROM
+    Rechnung AS r,
+    Benutzer AS b
+WHERE
+        r.BenutzerID = b.ID
+    AND
+        r.ID < 5</pre></td>
+                    <td><a href="javascript:query5();">run</a></td>
+                </tr>
+                <tr>
+                    <td><pre><code>{
+    tables: [
+        {name: "Rechnung", as: "r", where: {ID: 2}},
+        {name: "Artikel", as: "a"},
+        {name: "ArtikelZuRechnung", as: "azr"}
+    ],
+    joins: [
+        {table1: "azr", table1attr: "RechnungID", table2: "r", table2attr: "ID"},
+        {table1: "azr", table1attr: "ArtikelID", table2: "a", table2attr: "ID"}
+    ],
+    keys: [
+        {tablename: "r", attr: "BenutzerID"},
+        {tablename: "r", attr: "Datum"},
+        {tablename: "a", attr: "Bezeichnung"},
+        {tablename: "azr", attr: "Anzahl"},
+        {tablename: "azr", attr: "ID", as: "azrID"},
+        {tablename: "a", attr: "Preis", as: "Einzelpreis"},
+        {as: "Preis", value: {
+                operator: "*",
+                values: [
+                    {tablename: "azr", attr: "Anzahl"},
+                    {tablename: "a", attr:"Preis"}
+                ]
+            }
+        }
+    ]
+}</code></pre></td>
+                    <td>-</td>
+                    <td><a href="javascript:query6();">run</a></td>
+                </tr>
+                <tr>
+                    <td><pre><code>{
+        tables: [
+            {name: "Rechnung", as: "r", where: {ID: {"<": 20}}},
+            {name: "ArtikelZuRechnung", as: "azr"},
+            {name: "Benutzer", as: "b"}
+        ],
+        joins: [
+            {table1: "r", table1attr: "ID", table2: "azr", table2attr: "RechnungID", stack: true},
+            {table1: "r", table1attr: "BenutzerID", table2: "b", table2attr: "ID"}
+        ],
+        keys: [
+            {tablename: "r", attr: "BenutzerID"},
+            {tablename: "b", attr: "Vorname"},
+            {tablename: "b", attr: "Nachname"},
+            {tablename: "r", attr: "Datum"},
+            {tablename: "r", attr: "ID"},
+            {as: "AnzahlArtikel", func: "sum", tablename: "azr", attr: "Anzahl"}
+        ]
+    }</code></pre></td>
+                    <td>-</td>
+                    <td><a href="javascript:query7();">run</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </body>
+</html>
