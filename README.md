@@ -1,0 +1,2 @@
+# QueryDB
+Library for IndexedDB.
