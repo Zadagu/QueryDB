@@ -10,3 +10,4 @@ Mit QueryDB ist es möglich komplexe Anfragen auf einer IndexedDB Datenbank ausz
  * gezielt Datensätze löschen
  * Mehrere Datensätze auf einmal speichern
  * Mit Hilfe von dem QDBCounter kann man laufende Tranksaktionen zählen und sich so ein Überblick über den Fortschritt verschaffen
+ * mit wenig Aufwand die Struktur der Datenbank festlegen.
