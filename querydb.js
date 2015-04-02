@@ -14,12 +14,13 @@
  OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
 /**
  * @param {IDBDatabase} indexeddb
- * @class
+ * @class {Object} QDBQuery
  */
 var QDBQuery = (function(){
-    /** @constructs QDBQuery */
+    /** @constructs */
     var qdbquery = function (indexeddb) {
         /** @type IDBDatabase */
         var idb = indexeddb;
@@ -836,7 +837,7 @@ var QDBQuery = (function(){
     /**
      * Fehler der erzeugt wird, wenn in der zu verbindenden Tabelle kein passender Datensatz vorhanden ist.
      * Wird erzeugt durch joinTables()
-     * @constructor QDBQuery.NoMatchingEntriesException
+     * @constructor {Object} QDBQuery.NoMatchingEntriesException
      * @memberof QDBQuery
      */
     qdbquery.NoMatchingEntriesException = function() {
@@ -844,7 +845,7 @@ var QDBQuery = (function(){
     };
     /**
      * Wird erzeugt von solveOperation().
-     * @constructor QDBQuery.TableNotFound
+     * @constructor {Object} QDBQuery.TableNotFound
      * @memberof QDBQuery
      */
     qdbquery.TableNotFound = function() {
